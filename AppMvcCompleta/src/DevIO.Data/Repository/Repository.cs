@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DevIO.Business.Interfaces;
-using AppMvcBasica.Models;
+using DevIO.Business.Models;
 using DevIO.Data.Context;
 using System.Text;
 using Microsoft.EntityFrameworkCore;

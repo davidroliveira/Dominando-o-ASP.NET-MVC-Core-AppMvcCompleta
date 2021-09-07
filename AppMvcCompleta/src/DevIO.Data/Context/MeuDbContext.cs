@@ -10,9 +10,9 @@ namespace DevIO.Data.Context
     {
         public MeuDbContext(DbContextOptions options): base(options) { }
 
-        public DbSet<AppMvcBasica.Models.Produto> Produto { get; set; }
-        public DbSet<AppMvcBasica.Models.Endereco> Endereco { get; set; }
-        public DbSet<AppMvcBasica.Models.Fornecedor> Fornecedor { get; set; }
+        public DbSet<DevIO.Business.Models.Produto> Produto { get; set; }
+        public DbSet<DevIO.Business.Models.Endereco> Endereco { get; set; }
+        public DbSet<DevIO.Business.Models.Fornecedor> Fornecedor { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

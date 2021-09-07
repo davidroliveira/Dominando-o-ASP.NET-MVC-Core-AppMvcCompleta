@@ -19,7 +19,7 @@ namespace DevIO.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("AppMvcBasica.Models.Endereco", b =>
+            modelBuilder.Entity("DevIO.Business.Models.Endereco", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace DevIO.Data.Migrations
                     b.ToTable("Endereco","dbo");
                 });
 
-            modelBuilder.Entity("AppMvcBasica.Models.Fornecedor", b =>
+            modelBuilder.Entity("DevIO.Business.Models.Fornecedor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,7 +89,7 @@ namespace DevIO.Data.Migrations
                     b.ToTable("Fornecedor","dbo");
                 });
 
-            modelBuilder.Entity("AppMvcBasica.Models.Produto", b =>
+            modelBuilder.Entity("DevIO.Business.Models.Produto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,18 +126,18 @@ namespace DevIO.Data.Migrations
                     b.ToTable("Produto","dbo");
                 });
 
-            modelBuilder.Entity("AppMvcBasica.Models.Endereco", b =>
+            modelBuilder.Entity("DevIO.Business.Models.Endereco", b =>
                 {
-                    b.HasOne("AppMvcBasica.Models.Fornecedor", "Fornecedor")
+                    b.HasOne("DevIO.Business.Models.Fornecedor", "Fornecedor")
                         .WithOne("Endereco")
-                        .HasForeignKey("AppMvcBasica.Models.Endereco", "FornecedorId")
+                        .HasForeignKey("DevIO.Business.Models.Endereco", "FornecedorId")
                         .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AppMvcBasica.Models.Produto", b =>
+            modelBuilder.Entity("DevIO.Business.Models.Produto", b =>
                 {
-                    b.HasOne("AppMvcBasica.Models.Fornecedor", "Fornecedor")
+                    b.HasOne("DevIO.Business.Models.Fornecedor", "Fornecedor")
                         .WithMany("Produto")
                         .HasForeignKey("FornecedorId")
                         .OnDelete(DeleteBehavior.ClientNoAction)

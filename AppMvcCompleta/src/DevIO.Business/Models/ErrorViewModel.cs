@@ -1,6 +1,6 @@
 using System;
 
-namespace AppMvcBasica.Models
+namespace DevIO.Business.Models
 {
     public class ErrorViewModel
     {
