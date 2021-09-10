@@ -22,8 +22,7 @@ namespace DevIO.Data.Mappings
                    .IsRequired()
                    .HasColumnType("varchar(8)");
 
-            builder.Property(e => e.Complemento)
-                   .IsRequired()
+            builder.Property(e => e.Complemento)                   
                    .HasColumnType("varchar(250)");
 
             builder.Property(e => e.Bairro)

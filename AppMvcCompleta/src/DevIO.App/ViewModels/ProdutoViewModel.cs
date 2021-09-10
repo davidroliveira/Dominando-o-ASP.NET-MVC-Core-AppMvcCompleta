@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ namespace DevIO.App.ViewModels
         [StringLength(1000, ErrorMessage = "O campo {0} precisa ter entre {2} e {1}", MinimumLength = 2)]
         public string Descricao { get; set; }
 
+        [DisplayName("Imagem do Produto")]
         public IFormFile ImagemUpload { get; set; }
 
         public string Imagem { get; set; }
@@ -37,10 +39,11 @@ namespace DevIO.App.ViewModels
         public DateTime DataCadastro { get; set; }
 
         [DisplayName("Ativo?")]
-        public bool Ativo { get; set; }
-
+        public bool Ativo { get; set; }        
+        
         public FornecedorViewModel Fornecedor { get; set; }
 
+        //[NotMapped]
         public IEnumerable<FornecedorViewModel> Fornecedores { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using DevIO.Business.Interfaces;
 using DevIO.Business.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
@@ -29,7 +30,7 @@ namespace DevIO.App.Controllers
         {
             return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterProdutosFornecedores()));
         }
-
+                
         public async Task<IActionResult> Details(Guid id)
         {
 
@@ -111,7 +112,7 @@ namespace DevIO.App.Controllers
                 return NotFound();
             }
 
-            _produtoRepository.Remover(id);
+            await _produtoRepository.Remover(id);
 
             return RedirectToAction("Index");
         }
