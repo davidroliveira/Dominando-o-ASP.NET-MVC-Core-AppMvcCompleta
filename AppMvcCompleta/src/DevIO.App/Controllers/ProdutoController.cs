@@ -18,13 +18,13 @@ namespace DevIO.App.Controllers
     public class ProdutoController : BaseController
     {
         private readonly IProdutoRepository _produtoRepository;
-        private readonly IFornecedorRepository _fornecedorReposepository;
+        private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IMapper _mapper;
 
-        public ProdutoController(IProdutoRepository produtoRepository, IFornecedorRepository fornecedorReposepository, IMapper mapper)
+        public ProdutoController(IProdutoRepository produtoRepository, IFornecedorRepository fornecedorRepository, IMapper mapper)
         {
             _produtoRepository = produtoRepository;
-            _fornecedorReposepository = fornecedorReposepository;
+            _fornecedorRepository = fornecedorRepository;
             _mapper = mapper;
         }
 
@@ -32,7 +32,7 @@ namespace DevIO.App.Controllers
         {
             return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterProdutosFornecedores()));
         }
-                
+
         public async Task<IActionResult> Details(Guid id)
         {
 
@@ -62,10 +62,8 @@ namespace DevIO.App.Controllers
 
             var imgPrefixo = Guid.NewGuid() + "_";
 
-            if (!await UpLoadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
-            {
-                return View(produtoViewModel);
-            }
+            if (!await UpLoadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))            
+                return View(produtoViewModel);            
 
             produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
 
@@ -93,10 +91,30 @@ namespace DevIO.App.Controllers
                 return NotFound();
             }
 
+            var produtoAtualizacao = await ObterProduto(id);
+            produtoViewModel.Fornecedor = produtoAtualizacao.Fornecedor;
+            produtoViewModel.Imagem = produtoAtualizacao.Imagem;
+            
             if (!ModelState.IsValid)
                 return View(produtoViewModel);
 
-            await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoViewModel));
+            if (produtoViewModel.ImagemUpload != null)
+            {
+                var imgPrefixo = Guid.NewGuid() + "_";
+                if (!await UpLoadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
+                    return View(produtoViewModel);
+                produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
+            }
+
+            produtoAtualizacao.Nome = produtoViewModel.Nome;
+            produtoAtualizacao.Descricao = produtoViewModel.Descricao;
+            produtoAtualizacao.Valor = produtoViewModel.Valor;
+            produtoAtualizacao.Ativo = produtoViewModel.Ativo;
+            //produtoViewModel.Imagem = produtoAtualizacao.Imagem;            
+
+            await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));            
+            //await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoViewModel));            
+
             return RedirectToAction("Index");
         }
 
@@ -131,13 +149,13 @@ namespace DevIO.App.Controllers
         private async Task<ProdutoViewModel> ObterProduto(Guid Id)
         {
             var produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(Id));
-            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorReposepository.ObterTodos());
+            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
             return produto;
         }
 
         private async Task<ProdutoViewModel> PopularFornecedores(ProdutoViewModel produto)
         {
-            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorReposepository.ObterTodos());
+            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
             return produto;
         }
 
