@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.Extensions.Localization;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Linq;
-using System.Net.Mime;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Extensions.Localization;
 
 namespace DevIO.App.Extensions
 {
-    public class MoedaAttribute: ValidationAttribute
+    public class MoedaAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
@@ -25,17 +21,16 @@ namespace DevIO.App.Extensions
                 return new ValidationResult("Moeda em formato inválido");
             }
 
-            return base.IsValid(value, validationContext);
+            return ValidationResult.Success;
         }
     }
 
     public class MoedaAttributeAdapter : AttributeAdapterBase<MoedaAttribute>
     {
-        public MoedaAttributeAdapter(MoedaAttribute attribute, Microsoft.Extensions.Localization.IStringLocalizer stringLocalizer) : base(attribute, stringLocalizer)
+        public MoedaAttributeAdapter(MoedaAttribute attribute, IStringLocalizer stringLocalizer) : base(attribute, stringLocalizer)
         {
 
         }
-
         public override void AddValidation(ClientModelValidationContext context)
         {
             if (context == null)
