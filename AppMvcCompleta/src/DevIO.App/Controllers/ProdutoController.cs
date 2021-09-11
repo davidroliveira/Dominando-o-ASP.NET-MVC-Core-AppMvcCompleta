@@ -60,7 +60,7 @@ namespace DevIO.App.Controllers
 
             var imgPrefixo = Guid.NewGuid() + "_";
 
-            if (!await UpLoadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))            
+            if (!await UploadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))            
                 return View(produtoViewModel);            
 
             produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
@@ -84,47 +84,47 @@ namespace DevIO.App.Controllers
         public async Task<IActionResult> Edit(Guid id, ProdutoViewModel produtoViewModel)
         {
             if (id != produtoViewModel.Id)            
-                return NotFound();            
+                return NotFound();
 
             /* Codigo do Curso esta ocorrendo erro 
             var produtoAtualizacao = await ObterProduto(id);
             produtoViewModel.Fornecedor = produtoAtualizacao.Fornecedor;
-            //produtoViewModel.FornecedorId = produtoAtualizacao.FornecedorId;
             produtoViewModel.Imagem = produtoAtualizacao.Imagem;
-            
-            if (!ModelState.IsValid)
-                return View(produtoViewModel);
+            if (!ModelState.IsValid) return View(produtoViewModel);
 
             if (produtoViewModel.ImagemUpload != null)
             {
                 var imgPrefixo = Guid.NewGuid() + "_";
-                if (!await UpLoadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
+                if (!await UploadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
+                {
                     return View(produtoViewModel);
-                produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
+                }
+
+                produtoAtualizacao.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
             }
 
             produtoAtualizacao.Nome = produtoViewModel.Nome;
             produtoAtualizacao.Descricao = produtoViewModel.Descricao;
             produtoAtualizacao.Valor = produtoViewModel.Valor;
             produtoAtualizacao.Ativo = produtoViewModel.Ativo;
-            //produtoViewModel.Imagem = produtoAtualizacao.Imagem;                                   
 
+            //await _produtoService.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));  
             await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
-            //await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoViewModel));    
-            */            
-
+            */
+                        
             if (!ModelState.IsValid)
                 return View(produtoViewModel);
 
             if (produtoViewModel.ImagemUpload != null)
             {
                 var imgPrefixo = Guid.NewGuid() + "_";
-                if (!await UpLoadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
+                if (!await UploadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
                     return View(produtoViewModel);
                 produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
             }
 
             await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoViewModel));
+            
             return RedirectToAction("Index");
         }
 
@@ -166,7 +166,7 @@ namespace DevIO.App.Controllers
             return produto;
         }
 
-        private async Task<bool> UpLoadArquivo(IFormFile arquivo, string imgPrefixo)
+        private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)
         {
             if (arquivo.Length <= 0)
                 return false;

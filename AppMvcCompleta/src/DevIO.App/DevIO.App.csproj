@@ -10,6 +10,7 @@
     <None Remove="Controllers\ProdutoController.cs~RF789622e.TMP" />
     <None Remove="Startup.cs~RF15947c8.TMP" />
     <None Remove="ViewModels\EnderecoViewModel.cs~RF1c0c437.TMP" />
+    <None Remove="Views\Produto\Index.cshtml~RF9a329c0.TMP" />
   </ItemGroup>
 
   <ItemGroup>
