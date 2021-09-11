@@ -35,12 +35,10 @@ namespace DevIO.App.Controllers
 
         public async Task<IActionResult> Details(Guid id)
         {
-
             var produtoViewModel = await ObterProduto(id);
-            if (produtoViewModel == null)
-            {
+            if (produtoViewModel == null)            
                 return NotFound();
-            }
+            
 
             return View(produtoViewModel);
         }
@@ -75,10 +73,9 @@ namespace DevIO.App.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var produtoViewModel = await ObterProduto(id);
-            if (produtoViewModel == null)
-            {
+            if (produtoViewModel == null)            
                 return NotFound();
-            }
+            
             return View(produtoViewModel);
         }
 
@@ -86,13 +83,13 @@ namespace DevIO.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProdutoViewModel produtoViewModel)
         {
-            if (id != produtoViewModel.Id)
-            {
-                return NotFound();
-            }
+            if (id != produtoViewModel.Id)            
+                return NotFound();            
 
+            /* Codigo do Curso esta ocorrendo erro 
             var produtoAtualizacao = await ObterProduto(id);
             produtoViewModel.Fornecedor = produtoAtualizacao.Fornecedor;
+            //produtoViewModel.FornecedorId = produtoAtualizacao.FornecedorId;
             produtoViewModel.Imagem = produtoAtualizacao.Imagem;
             
             if (!ModelState.IsValid)
@@ -110,11 +107,24 @@ namespace DevIO.App.Controllers
             produtoAtualizacao.Descricao = produtoViewModel.Descricao;
             produtoAtualizacao.Valor = produtoViewModel.Valor;
             produtoAtualizacao.Ativo = produtoViewModel.Ativo;
-            //produtoViewModel.Imagem = produtoAtualizacao.Imagem;            
+            //produtoViewModel.Imagem = produtoAtualizacao.Imagem;                                   
 
-            await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));            
-            //await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoViewModel));            
+            await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
+            //await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoViewModel));    
+            */            
 
+            if (!ModelState.IsValid)
+                return View(produtoViewModel);
+
+            if (produtoViewModel.ImagemUpload != null)
+            {
+                var imgPrefixo = Guid.NewGuid() + "_";
+                if (!await UpLoadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
+                    return View(produtoViewModel);
+                produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
+            }
+
+            await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoViewModel));
             return RedirectToAction("Index");
         }
 
@@ -122,10 +132,9 @@ namespace DevIO.App.Controllers
         {
             var produto = await ObterProduto(id);
 
-            if (id == null)
-            {
+            if (id == null)            
                 return NotFound();
-            }
+            
 
             return View(produto);
         }
@@ -136,10 +145,8 @@ namespace DevIO.App.Controllers
         {
             var produto = await ObterProduto(id);
 
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null)            
+                return NotFound();            
 
             await _produtoRepository.Remover(id);
 

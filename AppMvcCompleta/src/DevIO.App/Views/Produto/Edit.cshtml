@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form enctype="multipart/form-data" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input type="hidden" asp-for="Id" />
@@ -58,6 +58,10 @@
                 <input type="submit" value="Salvar" class="btn btn-primary" />
                 <a class="btn btn-info" href="javascript:window.history.back();">Voltar</a>
             </div>
+
+            <input type="hidden" asp-for="Imagem" />
+            <input type="hidden" asp-for="FornecedorId" />
+
         </form>
     </div>
 </div>
