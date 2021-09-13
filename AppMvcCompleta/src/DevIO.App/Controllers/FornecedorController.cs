@@ -13,6 +13,7 @@ using DevIO.Business.Models;
 
 namespace DevIO.App.Controllers
 {
+    [Route("fornecedores")]
     public class FornecedorController : BaseController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
@@ -26,16 +27,15 @@ namespace DevIO.App.Controllers
             _enderecoRepository = enderecoRepository;
         }
 
+        [Route("index")]
         public async Task<IActionResult> Index()
         {
-            //return View(await _context.FornecedorViewModel.ToListAsync());
             return View(_mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos()));
         }
 
+        [Route("detalhes/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
-            //var fornecedorViewModel = await _context.FornecedorViewModel
-            //     .FirstOrDefaultAsync(m => m.Id == id);
             var fornecedorViewModel = await ObterFornecedorEndereco(id);
 
             if (fornecedorViewModel == null)
@@ -46,31 +46,29 @@ namespace DevIO.App.Controllers
             return View(fornecedorViewModel);
         }
 
+        [Route("novo")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Route("novo")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(/*[Bind("Id,Nome,Documento,TipoFornecedor,Ativo")]*/ FornecedorViewModel fornecedorViewModel)
+        public async Task<IActionResult> Create( FornecedorViewModel fornecedorViewModel)
         {
             if (!ModelState.IsValid)
                 return View(fornecedorViewModel);
 
-            //fornecedorViewModel.Id = Guid.NewGuid();
-            //_context.Add(fornecedorViewModel);
-            //await _context.SaveChangesAsync();
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
             await _fornecedorRepository.Adicionar(fornecedor);
 
-            //return RedirectToAction(nameof(Index));
             return RedirectToAction("Index");
         }
 
+        [Route("editar/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            //var fornecedorViewModel = await _context.FornecedorViewModel.FindAsync(id);
             var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
 
             if (fornecedorViewModel == null)
@@ -80,9 +78,10 @@ namespace DevIO.App.Controllers
             return View(fornecedorViewModel);
         }
 
+        [Route("editar/{id:guid}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, /*[Bind("Id,Nome,Documento,TipoFornecedor,Ativo")]*/ FornecedorViewModel fornecedorViewModel)
+        public async Task<IActionResult> Edit(Guid id,  FornecedorViewModel fornecedorViewModel)
         {
             if (id != fornecedorViewModel.Id)
                 return NotFound();
@@ -97,10 +96,9 @@ namespace DevIO.App.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("excluir/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            //var fornecedorViewModel = await _context.FornecedorViewModel
-            //    .FirstOrDefaultAsync(m => m.Id == id);
             var fornecedorViewModel = await ObterFornecedorEndereco(id);
             if (fornecedorViewModel == null)
             {
@@ -110,13 +108,11 @@ namespace DevIO.App.Controllers
             return View(fornecedorViewModel);
         }
 
+        [Route("excluir/{id:guid}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            //var fornecedorViewModel = await _context.FornecedorViewModel.FindAsync(id);
-            //_context.FornecedorViewModel.Remove(fornecedorViewModel);
-            //await _context.SaveChangesAsync();
             var fornecedorViewModel = await ObterFornecedorEndereco(id);
             if (fornecedorViewModel == null)
                 NotFound();
@@ -124,14 +120,7 @@ namespace DevIO.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public  async Task<IActionResult> AtualizarEndereco(Guid id)
-        {
-            var fornecedor = await ObterFornecedorEndereco(id);
-            if (fornecedor == null)
-                return NotFound();
-            return PartialView("_AtualizarEndereco", new FornecedorViewModel { Endereco = fornecedor.Endereco });
-        }
-
+        [Route("obter-endereco/{id:guid}")]
         public async Task<IActionResult> ObterEndereco(Guid id)
         {
             var fornecedor = await ObterFornecedorEndereco(id);
@@ -140,6 +129,16 @@ namespace DevIO.App.Controllers
             return PartialView("_DetalhesEndereco", fornecedor);
         }
 
+        [Route("atualizar-endereco/{id:guid}")]
+        public async Task<IActionResult> AtualizarEndereco(Guid id)
+        {
+            var fornecedor = await ObterFornecedorEndereco(id);
+            if (fornecedor == null)
+                return NotFound();
+            return PartialView("_AtualizarEndereco", new FornecedorViewModel { Endereco = fornecedor.Endereco });
+        }
+
+        [Route("atualizar-endereco/{id:guid}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AtualizarEndereco(FornecedorViewModel fornecedorViewModel)
