@@ -19,7 +19,7 @@ namespace DevIO.Business.Models
 
         public bool Ativo { get; set; }
 
-        public IEnumerable<Produto> Produto { get; set; }
+        public IEnumerable<Produto> Produtos { get; set; }
 
     }
 }

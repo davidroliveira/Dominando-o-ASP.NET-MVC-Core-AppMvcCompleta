@@ -21,7 +21,7 @@ namespace DevIO.Data.Mappings
             builder.HasOne(f => f.Endereco)
                    .WithOne(e => e.Fornecedor);
 
-            builder.HasMany(f => f.Produto)
+            builder.HasMany(f => f.Produtos)
                    .WithOne(p => p.Fornecedor)
                    .HasForeignKey(p => p.FornecedorId);
             

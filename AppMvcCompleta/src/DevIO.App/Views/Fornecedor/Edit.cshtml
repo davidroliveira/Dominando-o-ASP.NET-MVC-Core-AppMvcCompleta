@@ -10,6 +10,7 @@
 
 <form asp-action="Edit">
 
+    @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
     <vc:Summary></vc:Summary>
 
     <input type="hidden" asp-for="Id" />
@@ -59,7 +60,7 @@
 <hr />
 <h4>Produtos</h4>
 <div>
-    <partial name="../Produto/_ListaProdutos" model="@Model.Produto" />
+    <partial name="../Produto/_ListaProdutos" model="@Model.Produtos" />
 </div>
 
 <div id="myModal" class="modal fade in">

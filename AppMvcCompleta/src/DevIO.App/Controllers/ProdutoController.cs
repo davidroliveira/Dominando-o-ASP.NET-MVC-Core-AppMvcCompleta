@@ -2,6 +2,7 @@
 using DevIO.App.ViewModels;
 using DevIO.Business.Interfaces;
 using DevIO.Business.Models;
+using DevIO.Business.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,13 +21,19 @@ namespace DevIO.App.Controllers
     {
         private readonly IProdutoRepository _produtoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
+        private readonly IProdutoService _produtoService;
         private readonly IMapper _mapper;
 
-        public ProdutoController(IProdutoRepository produtoRepository, IFornecedorRepository fornecedorRepository, IMapper mapper)
+        public ProdutoController(IProdutoRepository produtoRepository, 
+                                 IFornecedorRepository fornecedorRepository, 
+                                 IMapper mapper,
+                                 IProdutoService produtoService, 
+                                 INotificador notificador): base(notificador)
         {
             _produtoRepository = produtoRepository;
             _fornecedorRepository = fornecedorRepository;
             _mapper = mapper;
+            _produtoService = produtoService;
         }
 
         [Route("index")]
@@ -70,7 +77,10 @@ namespace DevIO.App.Controllers
 
             produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
 
-            await _produtoRepository.Adicionar(_mapper.Map<Produto>(produtoViewModel));
+            await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
+
+            if (!OperacaoValida())
+                return View(produtoViewModel);
 
             return RedirectToAction("Index");
         }
@@ -104,21 +114,24 @@ namespace DevIO.App.Controllers
                 produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
             }
 
-            await _produtoRepository.Atualizar(_mapper.Map<Produto>(produtoViewModel));
-            
+            await _produtoService.Atualizar(_mapper.Map<Produto>(produtoViewModel));
+
+            if (!OperacaoValida())
+                return View(produtoViewModel);
+
             return RedirectToAction("Index");
         }
 
         [Route("excluir/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var produto = await ObterProduto(id);
+            var produtoViewModel = await ObterProduto(id);
 
             if (id == null)            
                 return NotFound();
-            
 
-            return View(produto);
+
+            return View(produtoViewModel);
         }
 
         [Route("excluir/{id:guid}")]
@@ -126,12 +139,17 @@ namespace DevIO.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var produto = await ObterProduto(id);
+            var produtoViewModel = await ObterProduto(id);
 
             if (id == null)            
                 return NotFound();            
 
-            await _produtoRepository.Remover(id);
+            await _produtoService.Remover(id);
+
+            if (!OperacaoValida())
+                return View(produtoViewModel);
+
+            TempData["Sucesso"] = "Produto excluído com sucesso :)";
 
             return RedirectToAction("Index");
         }
