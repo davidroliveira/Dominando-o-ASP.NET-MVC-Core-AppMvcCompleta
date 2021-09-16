@@ -48,11 +48,10 @@
             <dd>
                 @Html.DisplayFor(model => model.Ativo)
             </dd>
-        </dl>
-
+        </dl>        
         <div>
-            <a supress-by-claim-name="Produto" supress-by-claim-value="Editar" class="btn btn-dark" sp-action="Edit" asp-route-id="@Model.Id">Editar</a>
-            <a class="btn btn-info" href="javascript:window.history.back();">Voltar</a>
+            <a class="btn btn-dark" supress-by-claim-name="Produto" supress-by-claim-value="Editar" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+            <a class="btn btn-info" asp-action="Index">Voltar</a>
         </div>
     </div>
 </div>
